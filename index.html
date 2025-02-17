@@ -35,7 +35,7 @@
             writing-mode: bt-lr; /* Vertical slider */
             appearance: none;
             width: 6px;
-            height: 200px; /* Increased height for longer sliders */
+            height: 200px;
             background: #ddd;
             border-radius: 5px;
             outline: none;
@@ -118,7 +118,6 @@
         });
 
         function adjustSliders(changedVariable, value) {
-            // Define relationships between variables
             const relationships = {
                 "CO2 Emissions": ["Air Pollution", "Sea Level Rise", "Climate Change Impact"],
                 "Life Expectancy": ["Healthcare Access", "Disease Rate", "Mental Health"],
@@ -132,12 +131,12 @@
 
             if (relationships[changedVariable]) {
                 relationships[changedVariable].forEach(affectedVar => {
-                    let influence = (value - 50) * 0.5; // Increase the impact to be more visible
-                    let newValue = variableValues[affectedVar] + influence;
-                    newValue = Math.max(0, Math.min(100, newValue));
+                    let influence = (value - 50) * 0.8;
+                    let newValue = Math.max(0, Math.min(100, variableValues[affectedVar] + influence));
                     variableValues[affectedVar] = newValue;
                     let sliderIndex = variables.indexOf(affectedVar);
                     sliders[sliderIndex].value = newValue;
+                    sliders[sliderIndex].dispatchEvent(new Event('input'));
                 });
             }
         }
