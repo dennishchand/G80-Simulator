@@ -30,29 +30,26 @@
             border-radius: 2px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             width: 50px;
-            transition: transform 0.3s ease-in-out;
-        }
-        .slider-container.animated {
-            transform: translateY(-5px);
+            transition: transform 0.5s ease-in-out;
         }
         input[type="range"] {
-            writing-mode: bt-lr;
+            writing-mode: vertical-lr;
             appearance: none;
-            width: 6px;
+            width: 8px;
             height: 200px;
             background: #ddd;
             border-radius: 5px;
             outline: none;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
         }
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             background: #4CAF50;
             border-radius: 50%;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
         }
         input[type="range"]::-webkit-slider-thumb:hover {
             background: #45a049;
@@ -136,19 +133,18 @@
         function adjustSliders(changedVariable, value) {
             sliders.forEach((slider, index) => {
                 if (Math.random() > 0.5) {
-                    let influence = (value - 50) * 0.2 * (Math.random() + 0.5);
+                    let influence = (value - 50) * 0.4 * (Math.random() + 0.5);
                     let newValue = Math.max(0, Math.min(100, parseInt(slider.value) + influence));
                     slider.value = newValue;
                     variableValues[variables[index]] = newValue;
-                    animateSlider(index);
+                    animateSlider(slider, newValue);
                 }
             });
         }
 
-        function animateSlider(index) {
-            const container = document.getElementById(`container-${index}`);
-            container.classList.add('animated');
-            setTimeout(() => container.classList.remove('animated'), 300);
+        function animateSlider(slider, value) {
+            let movement = ((value - 50) / 10);
+            slider.style.transform = `translateY(${movement}px)`;
         }
     </script>
 </body>
