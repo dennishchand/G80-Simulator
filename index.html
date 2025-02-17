@@ -117,7 +117,7 @@
             const increaseBtn = document.createElement('button');
             increaseBtn.className = 'control-buttons';
             increaseBtn.textContent = '+';
-            increaseBtn.onclick = () => adjustValue(index, 5);
+            increaseBtn.onclick = () => adjustValue(index, -5);
 
             const slider = document.createElement('input');
             slider.type = 'range';
@@ -129,7 +129,7 @@
             const decreaseBtn = document.createElement('button');
             decreaseBtn.className = 'control-buttons';
             decreaseBtn.textContent = '-';
-            decreaseBtn.onclick = () => adjustValue(index, -5);
+            decreaseBtn.onclick = () => adjustValue(index, 5);
 
             const label = document.createElement('div');
             label.className = 'slider-label';
@@ -137,7 +137,7 @@
             
             const valueDisplay = document.createElement('div');
             valueDisplay.className = 'slider-value';
-            valueDisplay.textContent = `${slider.value}%`;
+            valueDisplay.textContent = `${100 - slider.value}%`;
 
             sliderContainer.appendChild(increaseBtn);
             sliderContainer.appendChild(slider);
@@ -151,7 +151,7 @@
             slider.addEventListener('input', (event) => {
                 const value = parseInt(event.target.value);
                 variableValues[variable] = value;
-                valueDisplay.textContent = `${value}%`;
+                valueDisplay.textContent = `${100 - value}%`;
                 adjustSliders(variable, value);
             });
         });
@@ -160,7 +160,7 @@
             let newValue = Math.max(0, Math.min(100, parseInt(sliders[index].value) + amount));
             sliders[index].value = newValue;
             variableValues[variables[index]] = newValue;
-            document.querySelector(`#container-${index} .slider-value`).textContent = `${newValue}%`;
+            document.querySelector(`#container-${index} .slider-value`).textContent = `${100 - newValue}%`;
             adjustSliders(variables[index], newValue);
         }
     </script>
