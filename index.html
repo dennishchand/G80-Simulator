@@ -132,16 +132,12 @@
 
             if (relationships[changedVariable]) {
                 relationships[changedVariable].forEach(affectedVar => {
-                    let influence = (value - 50) * 0.3;
+                    let influence = (value - 50) * 0.5; // Increase the impact to be more visible
                     let newValue = variableValues[affectedVar] + influence;
                     newValue = Math.max(0, Math.min(100, newValue));
                     variableValues[affectedVar] = newValue;
                     let sliderIndex = variables.indexOf(affectedVar);
                     sliders[sliderIndex].value = newValue;
-                    
-                    // Trigger input event to ensure proper updates
-                    const event = new Event('input', { bubbles: true });
-                    sliders[sliderIndex].dispatchEvent(event);
                 });
             }
         }
