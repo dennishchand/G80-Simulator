@@ -85,14 +85,7 @@
     <div class="slider-grid" id="sliderGrid"></div>
 
     <script>
-        const variables = [
-            "CO2 Emissions", "Air Pollution", "Deforestation", "Sea Level Rise", "Renewable Energy Usage",
-            "Life Expectancy", "Healthcare Access", "Disease Rate", "Mental Health", "Water Quality",
-            "GDP Growth", "Inflation", "Income Inequality", "Unemployment Rate", "Job Availability",
-            "Democracy Index", "Corruption Level", "Political Stability", "Public Trust", "Government Spending",
-            "Education Level", "School Enrollment", "Teacher Availability", "Literacy Rate", "Student Performance"
-        ];
-
+        const variables = [...Array(80)].map((_, i) => `Variable ${i + 1}`);
         const variableValues = {};
         const sliders = [];
         const sliderGrid = document.getElementById('sliderGrid');
@@ -107,7 +100,7 @@
             const increaseBtn = document.createElement('button');
             increaseBtn.className = 'control-buttons';
             increaseBtn.textContent = '+';
-            increaseBtn.onclick = () => adjustValue(index, -5);
+            increaseBtn.onclick = () => adjustValue(index, 5);
 
             const slider = document.createElement('input');
             slider.type = 'range';
@@ -119,7 +112,7 @@
             const decreaseBtn = document.createElement('button');
             decreaseBtn.className = 'control-buttons';
             decreaseBtn.textContent = '-';
-            decreaseBtn.onclick = () => adjustValue(index, 5);
+            decreaseBtn.onclick = () => adjustValue(index, -5);
 
             const label = document.createElement('div');
             label.className = 'slider-label';
@@ -127,7 +120,7 @@
             
             const valueDisplay = document.createElement('div');
             valueDisplay.className = 'slider-value';
-            valueDisplay.textContent = `${100 - slider.value}%`;
+            valueDisplay.textContent = `${slider.value}%`;
 
             sliderContainer.appendChild(increaseBtn);
             sliderContainer.appendChild(slider);
@@ -141,7 +134,7 @@
             slider.addEventListener('input', (event) => {
                 const value = parseInt(event.target.value);
                 variableValues[variable] = value;
-                valueDisplay.textContent = `${100 - value}%`;
+                valueDisplay.textContent = `${value}%`;
                 adjustSliders(variable, value);
             });
         });
@@ -150,18 +143,16 @@
             let newValue = Math.max(0, Math.min(100, parseInt(sliders[index].value) + amount));
             sliders[index].value = newValue;
             variableValues[variables[index]] = newValue;
-            document.querySelector(`#container-${index} .slider-value`).textContent = `${100 - newValue}%`;
+            document.querySelector(`#container-${index} .slider-value`).textContent = `${newValue}%`;
             adjustSliders(variables[index], newValue);
         }
 
         function adjustSliders(changedVariable, value) {
             sliders.forEach((slider, index) => {
-                if (Math.random() > 0.5) {
-                    let influence = (value - 50) * 0.3 * (Math.random() + 0.5);
-                    let newValue = Math.max(0, Math.min(100, parseInt(slider.value) + influence));
-                    slider.value = newValue;
-                    document.querySelector(`#container-${index} .slider-value`).textContent = `${100 - newValue}%`;
-                }
+                let influence = (value - 50) * 0.3 * (Math.random() + 0.5);
+                let newValue = Math.max(0, Math.min(100, parseInt(slider.value) + influence));
+                slider.value = newValue;
+                document.querySelector(`#container-${index} .slider-value`).textContent = `${newValue}%`;
             });
         }
     </script>
