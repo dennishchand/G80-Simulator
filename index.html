@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G80 Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .slider-container {
+            margin: 10px auto;
+            width: 90%;
+            max-width: 400px;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+        .value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .updating {
+            display: none;
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>G80 Simulator</h1>
+    <div id="updating" class="updating">Updating...</div>
+    <div id="sliders"></div>
+
+    <script>
+        const groups = {
+            "Healthcare": ["Healthcare Access", "Life Expectancy", "Medicine", "Cancer Rate", "Death Rate"],
+            "Economy": ["GDP Growth", "Inflation", "Unemployment", "Income Inequality", "Poverty Rate"],
+            "Climate": ["Global Temperature", "CO2 Emissions", "Sea Level Rise", "Natural Disasters", "Air Pollution"],
+            "Education": ["Literacy Rate", "Higher Education", "School Enrollment", "Teacher Availability", "Student Performance"],
+            "Technology": ["Internet Access", "AI Development", "Tech Investment", "Innovation Index", "Digital Divide"],
+            "Energy": ["Renewable Energy Usage", "Fossil Fuel Dependence", "Energy Consumption", "Electric Grid Stability", "Nuclear Power Growth"],
+            "Crime": ["Crime Rate", "Prison Population", "Law Enforcement Funding", "Violent Crime", "Cybercrime"],
+            "Politics": ["Political Stability", "Democracy Index", "Government Spending", "Corruption Level", "Public Trust"],
+            "Migration": ["Migration Rate", "Refugee Population", "Border Security", "Job Availability for Immigrants", "Cultural Integration"],
+            "Social": ["Social Welfare", "Mental Health Access", "Happiness Index", "Income Support", "Community Engagement"]
+        };
+
+        let sliders = {};
+        Object.values(groups).flat().forEach(variable => {
+            sliders[variable] = 50;
+        });
+
+        function updateSliders(name, value) {
+            sliders[name] = value;
+            document.getElementById("updating").style.display = "block";
+            setTimeout(() => {
+                document.getElementById(name + "Value").innerText = value;
+                adjustRelatedSliders(name, value);
+                document.getElementById("updating").style.display = "none";
+            }, 1000);
+        }
+
+        function adjustRelatedSliders(changedVar, value) {
+            let tempSliders = { ...sliders };
+
+            for (let group in groups) {
+                if (groups[group].includes(changedVar)) {
+                    groups[group].forEach(variable => {
+                        if (variable !== changedVar) {
+                            tempSliders[variable] += (value - 50) * 0.2;
+                        }
+                    });
+                }
+            }
+
+            Object.values(groups).flat().forEach(variable => {
+                sliders[variable] = Math.max(0, Math.min(100, tempSliders[variable]));
+                document.getElementById(variable + "Value").innerText = Math.round(sliders[variable]);
+                document.getElementById(variable).value = Math.round(sliders[variable]);
+            });
+        }
+
+        function createSliders() {
+            const sliderContainer = document.getElementById("sliders");
+            Object.entries(groups).forEach(([group, variables]) => {
+                let groupTitle = document.createElement("h2");
+                groupTitle.textContent = group;
+                sliderContainer.appendChild(groupTitle);
+
+                variables.forEach(variable => {
+                    const div = document.createElement("div");
+                    div.className = "slider-container";
+                    div.innerHTML = `
+                        <label>${variable}: <span class="value" id="${variable}Value">50</span></label><br>
+                        <input type="range" id="${variable}" min="0" max="100" value="50" oninput="updateSliders('${variable}', this.value)">
+                    `;
+                    sliderContainer.appendChild(div);
+                });
+            });
+        }
+
+        createSliders();
+    </script>
+
+</body>
+</html>
