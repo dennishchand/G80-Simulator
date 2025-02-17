@@ -70,22 +70,26 @@
             margin: 2px;
             border-radius: 3px;
         }
-        .slider-value {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 12px;
-            font-weight: bold;
-            color: black;
-        }
     </style>
 </head>
 <body>
     <div class="slider-grid" id="sliderGrid"></div>
 
     <script>
-        const variables = [...Array(80)].map((_, i) => `Variable ${i + 1}`);
+        const variables = [
+            "CO2 Emissions", "Air Pollution", "Deforestation", "Sea Level Rise", "Renewable Energy Usage",
+            "Life Expectancy", "Healthcare Access", "Disease Rate", "Mental Health", "Water Quality",
+            "GDP Growth", "Inflation", "Income Inequality", "Unemployment Rate", "Job Availability",
+            "Democracy Index", "Corruption Level", "Political Stability", "Public Trust", "Government Spending",
+            "Education Level", "School Enrollment", "Teacher Availability", "Literacy Rate", "Student Performance",
+            "Food Security", "Agricultural Productivity", "Resource Depletion", "Ecosystem Services", "Natural Disaster Frequency",
+            "Public Debt", "Investment in R&D", "Consumer Confidence", "Trade Balance", "Technological Innovation",
+            "Transportation Quality", "Infrastructure Stability", "Traffic Congestion", "Public Transport Usage", "Smart City Development",
+            "Work-Life Balance", "Mental Stress Levels", "Physical Activity", "Obesity Rate", "Health Crisis Response",
+            "Ocean Health", "Biodiversity Loss", "Wildlife Conservation", "Waste Generation", "Recycling Rate",
+            "Capitalism Index", "Market Stability", "Stock Market Volatility", "Wealth Distribution", "Automation Impact"
+        ];
+        
         const variableValues = {};
         const sliders = [];
         const sliderGrid = document.getElementById('sliderGrid');
@@ -117,16 +121,11 @@
             const label = document.createElement('div');
             label.className = 'slider-label';
             label.textContent = variable;
-            
-            const valueDisplay = document.createElement('div');
-            valueDisplay.className = 'slider-value';
-            valueDisplay.textContent = `${slider.value}%`;
 
             sliderContainer.appendChild(increaseBtn);
             sliderContainer.appendChild(slider);
             sliderContainer.appendChild(decreaseBtn);
             sliderContainer.appendChild(label);
-            sliderContainer.appendChild(valueDisplay);
             sliderGrid.appendChild(sliderContainer);
 
             sliders.push(slider);
@@ -134,7 +133,6 @@
             slider.addEventListener('input', (event) => {
                 const value = parseInt(event.target.value);
                 variableValues[variable] = value;
-                valueDisplay.textContent = `${value}%`;
                 adjustSliders(variable, value);
             });
         });
@@ -143,7 +141,6 @@
             let newValue = Math.max(0, Math.min(100, parseInt(sliders[index].value) + amount));
             sliders[index].value = newValue;
             variableValues[variables[index]] = newValue;
-            document.querySelector(`#container-${index} .slider-value`).textContent = `${newValue}%`;
             adjustSliders(variables[index], newValue);
         }
 
@@ -152,7 +149,6 @@
                 let influence = (value - 50) * 0.3 * (Math.random() + 0.5);
                 let newValue = Math.max(0, Math.min(100, parseInt(slider.value) + influence));
                 slider.value = newValue;
-                document.querySelector(`#container-${index} .slider-value`).textContent = `${newValue}%`;
             });
         }
     </script>
