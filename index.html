@@ -88,19 +88,9 @@
         const variables = [
             "CO2 Emissions", "Air Pollution", "Deforestation", "Sea Level Rise", "Renewable Energy Usage",
             "Life Expectancy", "Healthcare Access", "Disease Rate", "Mental Health", "Water Quality",
-            "AI Development", "Internet Access", "Digital Surveillance", "Data Privacy", "Cybersecurity",
             "GDP Growth", "Inflation", "Income Inequality", "Unemployment Rate", "Job Availability",
             "Democracy Index", "Corruption Level", "Political Stability", "Public Trust", "Government Spending",
-            "Education Level", "School Enrollment", "Teacher Availability", "Literacy Rate", "Student Performance",
-            "Social Welfare", "Happiness Index", "Community Engagement", "Crime Rate", "Law Enforcement Funding",
-            "Refugee Population", "Migration Rate", "Border Security", "Cultural Integration", "Housing Availability",
-            "Energy Consumption", "Electric Grid Stability", "Nuclear Power Growth", "Fossil Fuel Dependence", "Climate Change Impact",
-            "Food Security", "Agricultural Productivity", "Resource Depletion", "Ecosystem Services", "Natural Disaster Frequency",
-            "Public Debt", "Investment in R&D", "Consumer Confidence", "Trade Balance", "Technological Innovation",
-            "Transportation Quality", "Infrastructure Stability", "Traffic Congestion", "Public Transport Usage", "Smart City Development",
-            "Work-Life Balance", "Mental Stress Levels", "Physical Activity", "Obesity Rate", "Health Crisis Response",
-            "Ocean Health", "Biodiversity Loss", "Wildlife Conservation", "Waste Generation", "Recycling Rate",
-            "Capitalism Index", "Market Stability", "Stock Market Volatility", "Wealth Distribution", "Automation Impact"
+            "Education Level", "School Enrollment", "Teacher Availability", "Literacy Rate", "Student Performance"
         ];
 
         const variableValues = {};
@@ -162,6 +152,17 @@
             variableValues[variables[index]] = newValue;
             document.querySelector(`#container-${index} .slider-value`).textContent = `${100 - newValue}%`;
             adjustSliders(variables[index], newValue);
+        }
+
+        function adjustSliders(changedVariable, value) {
+            sliders.forEach((slider, index) => {
+                if (Math.random() > 0.5) {
+                    let influence = (value - 50) * 0.3 * (Math.random() + 0.5);
+                    let newValue = Math.max(0, Math.min(100, parseInt(slider.value) + influence));
+                    slider.value = newValue;
+                    document.querySelector(`#container-${index} .slider-value`).textContent = `${100 - newValue}%`;
+                }
+            });
         }
     </script>
 </body>
