@@ -30,9 +30,13 @@
             border-radius: 2px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             width: 50px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .slider-container.animated {
+            transform: translateY(-5px);
         }
         input[type="range"] {
-            writing-mode: bt-lr; /* Vertical slider */
+            writing-mode: bt-lr;
             appearance: none;
             width: 6px;
             height: 200px;
@@ -58,39 +62,38 @@
             font-size: 8px;
             text-align: center;
         }
+        .control-buttons {
+            font-size: 12px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 2px;
+            margin: 2px;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
     <div class="slider-grid" id="sliderGrid"></div>
 
     <script>
-        const variables = [
-            "CO2 Emissions", "Air Pollution", "Deforestation", "Sea Level Rise", "Renewable Energy Usage",
-            "Life Expectancy", "Healthcare Access", "Disease Rate", "Mental Health", "Water Quality",
-            "AI Development", "Internet Access", "Digital Surveillance", "Data Privacy", "Cybersecurity",
-            "GDP Growth", "Inflation", "Income Inequality", "Unemployment Rate", "Job Availability",
-            "Democracy Index", "Corruption Level", "Political Stability", "Public Trust", "Government Spending",
-            "Education Level", "School Enrollment", "Teacher Availability", "Literacy Rate", "Student Performance",
-            "Social Welfare", "Happiness Index", "Community Engagement", "Crime Rate", "Law Enforcement Funding",
-            "Refugee Population", "Migration Rate", "Border Security", "Cultural Integration", "Housing Availability",
-            "Energy Consumption", "Electric Grid Stability", "Nuclear Power Growth", "Fossil Fuel Dependence", "Climate Change Impact",
-            "Food Security", "Agricultural Productivity", "Resource Depletion", "Ecosystem Services", "Natural Disaster Frequency",
-            "Public Debt", "Investment in R&D", "Consumer Confidence", "Trade Balance", "Technological Innovation",
-            "Transportation Quality", "Infrastructure Stability", "Traffic Congestion", "Public Transport Usage", "Smart City Development",
-            "Work-Life Balance", "Mental Stress Levels", "Physical Activity", "Obesity Rate", "Health Crisis Response",
-            "Ocean Health", "Biodiversity Loss", "Wildlife Conservation", "Waste Generation", "Recycling Rate",
-            "Capitalism Index", "Market Stability", "Stock Market Volatility", "Wealth Distribution", "Automation Impact"
-        ];
-
+        const variables = [...Array(80)].map((_, i) => `Variable ${i + 1}`);
         const variableValues = {};
         const sliders = [];
         const sliderGrid = document.getElementById('sliderGrid');
 
         variables.forEach((variable, index) => {
-            variableValues[variable] = 50; // Initial value for all variables
+            variableValues[variable] = 50;
             
             const sliderContainer = document.createElement('div');
             sliderContainer.className = 'slider-container';
+            sliderContainer.id = `container-${index}`;
+
+            const increaseBtn = document.createElement('button');
+            increaseBtn.className = 'control-buttons';
+            increaseBtn.textContent = '+';
+            increaseBtn.onclick = () => adjustValue(index, 5);
 
             const slider = document.createElement('input');
             slider.type = 'range';
@@ -99,17 +102,23 @@
             slider.value = 50;
             slider.dataset.index = index;
 
+            const decreaseBtn = document.createElement('button');
+            decreaseBtn.className = 'control-buttons';
+            decreaseBtn.textContent = '-';
+            decreaseBtn.onclick = () => adjustValue(index, -5);
+
             const label = document.createElement('div');
             label.className = 'slider-label';
             label.textContent = variable;
 
+            sliderContainer.appendChild(increaseBtn);
             sliderContainer.appendChild(slider);
+            sliderContainer.appendChild(decreaseBtn);
             sliderContainer.appendChild(label);
             sliderGrid.appendChild(sliderContainer);
 
             sliders.push(slider);
 
-            // Add event listener
             slider.addEventListener('input', (event) => {
                 const value = parseInt(event.target.value);
                 variableValues[variable] = value;
@@ -117,28 +126,29 @@
             });
         });
 
-        function adjustSliders(changedVariable, value) {
-            const relationships = {
-                "CO2 Emissions": ["Air Pollution", "Sea Level Rise", "Climate Change Impact"],
-                "Life Expectancy": ["Healthcare Access", "Disease Rate", "Mental Health"],
-                "GDP Growth": ["Inflation", "Income Inequality", "Job Availability"],
-                "Political Stability": ["Democracy Index", "Corruption Level", "Public Trust"],
-                "Education Level": ["Literacy Rate", "School Enrollment", "Student Performance"],
-                "Energy Consumption": ["Electric Grid Stability", "Fossil Fuel Dependence", "Renewable Energy Usage"],
-                "Social Welfare": ["Happiness Index", "Community Engagement", "Crime Rate"],
-                "Migration Rate": ["Refugee Population", "Border Security", "Cultural Integration"]
-            };
+        function adjustValue(index, amount) {
+            let newValue = Math.max(0, Math.min(100, parseInt(sliders[index].value) + amount));
+            sliders[index].value = newValue;
+            variableValues[variables[index]] = newValue;
+            adjustSliders(variables[index], newValue);
+        }
 
-            if (relationships[changedVariable]) {
-                relationships[changedVariable].forEach(affectedVar => {
-                    let influence = (value - 50) * 0.8;
-                    let newValue = Math.max(0, Math.min(100, variableValues[affectedVar] + influence));
-                    variableValues[affectedVar] = newValue;
-                    let sliderIndex = variables.indexOf(affectedVar);
-                    sliders[sliderIndex].value = newValue;
-                    sliders[sliderIndex].dispatchEvent(new Event('input'));
-                });
-            }
+        function adjustSliders(changedVariable, value) {
+            sliders.forEach((slider, index) => {
+                if (Math.random() > 0.5) {
+                    let influence = (value - 50) * 0.2 * (Math.random() + 0.5);
+                    let newValue = Math.max(0, Math.min(100, parseInt(slider.value) + influence));
+                    slider.value = newValue;
+                    variableValues[variables[index]] = newValue;
+                    animateSlider(index);
+                }
+            });
+        }
+
+        function animateSlider(index) {
+            const container = document.getElementById(`container-${index}`);
+            container.classList.add('animated');
+            setTimeout(() => container.classList.remove('animated'), 300);
         }
     </script>
 </body>
