@@ -13,39 +13,39 @@
         }
         .slider-group {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
             gap: 20px;
             margin-bottom: 20px;
         }
         .slider-container {
-            width: 45%;
+            width: 80%;
             padding: 10px;
             background: white;
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: left;
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 0.3s ease-in-out;
+        }
+        .slider-container.animate {
+            transform: translateY(10px);
         }
         input[type="range"] {
-            width: 100%;
+            writing-mode: bt-lr;
+            appearance: slider-vertical;
+            height: 100px;
+            width: 20px;
         }
         .value {
             font-size: 16px;
             font-weight: bold;
-        }
-        .updating {
-            display: none;
-            font-size: 18px;
-            font-weight: bold;
-            color: red;
-            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
 
     <h1>G80 Simulator</h1>
-    <div id="updating" class="updating">Updating...</div>
     <div id="sliders"></div>
 
     <script>
@@ -69,11 +69,7 @@
 
         function updateSliders(name, value) {
             sliders[name] = value;
-            document.getElementById("updating").style.display = "block";
-            setTimeout(() => {
-                adjustAllSliders(name, value);
-                document.getElementById("updating").style.display = "none";
-            }, 1000);
+            adjustAllSliders(name, value);
         }
 
         function adjustAllSliders(changedVar, value) {
@@ -96,7 +92,14 @@
                 sliders[variable] = Math.max(0, Math.min(100, tempSliders[variable]));
                 document.getElementById(variable + "Value").innerText = Math.round(sliders[variable]);
                 document.getElementById(variable).value = Math.round(sliders[variable]);
+                animateSlider(variable);
             });
+        }
+
+        function animateSlider(variable) {
+            const sliderDiv = document.getElementById(variable + "Container");
+            sliderDiv.classList.add("animate");
+            setTimeout(() => sliderDiv.classList.remove("animate"), 300);
         }
 
         function createSliders() {
@@ -112,6 +115,7 @@
                 variables.forEach(variable => {
                     const div = document.createElement("div");
                     div.className = "slider-container";
+                    div.id = variable + "Container";
                     div.innerHTML = `
                         <label>${variable}: <span class="value" id="${variable}Value">50</span></label><br>
                         <input type="range" id="${variable}" min="0" max="100" value="50" oninput="updateSliders('${variable}', this.value)">
