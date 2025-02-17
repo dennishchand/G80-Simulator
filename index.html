@@ -138,6 +138,10 @@
                     variableValues[affectedVar] = newValue;
                     let sliderIndex = variables.indexOf(affectedVar);
                     sliders[sliderIndex].value = newValue;
+                    
+                    // Trigger input event to ensure proper updates
+                    const event = new Event('input', { bubbles: true });
+                    sliders[sliderIndex].dispatchEvent(event);
                 });
             }
         }
